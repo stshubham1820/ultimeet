@@ -1,0 +1,23 @@
+<!-- home.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Meeting Recorder</title>
+</head>
+<body>
+    <h1>Meeting Recorder</h1>
+    <p>{{ message }}</p>
+    <button onclick="startRecording()">Start Meeting</button>
+    <button onclick="stopRecording()">Stop Meeting</button>
+    <script>
+        function startRecording() {
+            window.location.href = "{% url 'start_recording' %}";
+        }
+
+        function stopRecording() {
+            window.location.href = "{% url 'stop_recording' %}";
+        }
+    </script>
+</body>
+</html>
