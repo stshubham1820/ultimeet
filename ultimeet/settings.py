@@ -21,7 +21,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 ALLOWED_HOSTS = [
     # ... other allowed hosts ...
     '127.0.0.1',
-    '0.0.0.0'
+    '0.0.0.0',
+    '20.219.34.60',
 ]
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -78,28 +79,6 @@ MIDDLEWARE = [
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
-
-CORS_ORIGIN_WHITELIST = [
-    'http://127.0.0.1:8000',
-]
-
-CORS_ORIGIN_ALLOW_ALL = True
-
-
-CORS_ALLOWED_ORIGINS = [
-    'https://ccd1-116-74-158-242.ngrok-free.app',
-    'http://127.0.0.1:8000',
-]
-
-
-
-CORS_ALLOWED_ORIGIN_REGEXES = [
-    r"^https?://\w+\.ccd1-116-74-158-242.ngrok-free.app\.com$",
-
-]
-
-CORS_ALLOW_ALL_HEADERS = True
-CORS_ALLOW_ALL_METHODS = True
 
 
 
@@ -161,7 +140,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
