@@ -4,7 +4,6 @@ import time
 # use the Python textwrap library to split the text into chunks of `max_prompt_tokens` length
 import textwrap
 import openai
-import json
 from collections import defaultdict
 
 # django imports
@@ -34,15 +33,17 @@ def calculate_talk_time_percentages(transcript):
     total_talk_time = 0
     speaker_talk_time = {}
 
-    # Calculate total talk time and individual speaker talk time
     for entry in transcript:
-        talk_time = entry['end_time'] - entry['start_time']
-        total_talk_time += talk_time
+        try:
+            talk_time = entry['end_time'] - entry['start_time']
+            total_talk_time += talk_time
 
-        if entry['speaker'] in speaker_talk_time:
-            speaker_talk_time[entry['speaker']] += talk_time
-        else:
-            speaker_talk_time[entry['speaker']] = talk_time
+            if entry['speaker'] in speaker_talk_time:
+                speaker_talk_time[entry['speaker']] += talk_time
+            else:
+                speaker_talk_time[entry['speaker']] = talk_time
+        except KeyError as e:
+            print(f"KeyError: {e} for entry: {entry}")
 
     # Calculate and print speaker talk time percentages
     speaker_percentages = {}
