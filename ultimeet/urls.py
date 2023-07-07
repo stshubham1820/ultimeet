@@ -10,6 +10,8 @@ urlpatterns = [
     path('meeting_summary/', include('meeting_summary.urls')),
     path('meeting_action_tasks/', include('meeting_action_tasks.urls')),
     path('analytics/', include('analytics.urls')),
+    path('meeting_action_tasks/', include('meeting_action_tasks.urls')),
+    #path('master/', include('master.urls')),
 
    # path('', views.home, name='home'),
     #path('start_recording/', views.start_recording, name='start_recording'),
