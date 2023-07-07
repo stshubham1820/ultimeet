@@ -70,7 +70,7 @@ def key_labels(transcript):
     prompt = final_transcript#trancript_object.transcript_raw
     prompt_chunks = textwrap.wrap(prompt, max_prompt_tokens)
 
-    openai.api_key = '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'
+    openai.api_key = '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'
     response = None
     for chunk in prompt_chunks:
         response = openai.Completion.create(

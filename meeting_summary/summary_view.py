@@ -32,7 +32,7 @@ def summary_text(meeting_id):
     prompt = final_transcript#trancript_object.transcript_raw
     prompt_chunks = textwrap.wrap(prompt, max_prompt_tokens)
 
-    openai.api_key = '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'
+    openai.api_key = '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'
     response = None
     for chunk in prompt_chunks:
         response = openai.Completion.create(
@@ -53,8 +53,4 @@ def summary_text(meeting_id):
         print(output)
         return output
     else:
-<<<<<<< Updated upstream
         return json.dumps({"meeting_id": meeting_id, "summary": "None"})
-=======
-        return "None"
->>>>>>> Stashed changes
