@@ -6,6 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from user_authentication.models import User, Session
 from recording_transcription.models import Meeting, Participant
+from meeting_summary.models import Summary
 from .key_points import get_key_points
 from .users_audio_breakpoints import audio_breakpoints, meeting_key_labels
 from .agenda import meeting_agenda
@@ -15,7 +16,11 @@ from .summary_view import summary_text
 def summary_view(request, meeting_id):
     if request.method == 'GET':
         try:
+            #meeting = Meeting.objects.get(id=meeting_id)
             summary = summary_text(meeting_id)
+            #summary_object = Summary(meeting_id=meeting_id, summary=summary)
+            #print('Summary:',summary_object)
+            #summary_object.save()
             return JsonResponse({'meeting_id': meeting_id,'summary': summary})
 
         except Meeting.DoesNotExist:

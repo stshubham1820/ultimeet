@@ -1,11 +1,11 @@
 from user_authentication.models import User, Session
-from recording_transcription.models import Meeting, Transcript
+from recording_transcription.models import Meeting, Transcript, Priority,Status
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse,HttpResponse
 import json
 from datetime import datetime
-#from .transcript import process_transcription
-#from .audio_recorder import AudioRecorder
+from .transcript import process_transcription
+from .audio_recorder import AudioRecorder
 
 
 
@@ -258,6 +258,8 @@ def create_meeting(request):
 @csrf_exempt
 def get_transcription(request, meeting_id):
     if request.method == 'GET':
+        print('API Called:',meeting_id)
+        #meetingid=getMeeting_id(meeting_id)
         # Retrieve the JSON data from the request body
         data = json.loads(request.body)
 
@@ -265,13 +267,15 @@ def get_transcription(request, meeting_id):
         raw_transcript = data.get('raw_transcript')
 
         try:
+            utterances = ""
+            entities =""
             # Retrieve the meeting based on the provided meeting_id
-            meeting_id = Meeting.objects.get(pk=meeting_id)
-            final_transcript = ''#process_transcription()
-            print(final_transcript)
+            meeting = Meeting.objects.get(pk=meeting_id)
+            final_transcript = process_transcription(entities,utterances,meeting.meeting_id)
+            print('test',final_transcript)
             # Create a new Transcript object with the retrieved data
             transcript = Transcript(
-                meeting_id=meeting_id,
+                meeting_id=meeting.meeting_id,
                 raw_transcript=final_transcript
             )
 
@@ -287,7 +291,7 @@ def get_transcription(request, meeting_id):
 @csrf_exempt
 def create_transcript(request,meeting_id):
     if request.method == 'POST':
-        final_transcript =''#process_transcription()
+        final_transcript =process_transcription(meeting_id)
         final_transcript = json.loads(final_transcript)
         return JsonResponse(final_transcript, safe=False)
 
@@ -312,22 +316,47 @@ def transcription_view(request, meeting_id):
     else:
         return JsonResponse({'error': 'Invalid request method.'}, status=405)
 
+import threading
 
-#recorder = AudioRecorder()
+recorder = AudioRecorder()
 
-#@csrf_exempt
-#def start_recording(request,meeting_id):
-#    if not recorder.recording:
-#        recorder.recording = True
-#        recorder.meeting_id = meeting_id
-#        threading.Thread(target=recorder.record_audio).start()
-#    return HttpResponse("Recording started")
+@csrf_exempt
+def start_recording(request,meeting_id):
+   if not recorder.recording:
+       recorder.recording = True
+       recorder.meeting_id = meeting_id
+       threading.Thread(target=recorder.record_audio).start()
+   return HttpResponse("Recording started")
 
-#@csrf_exempt
-#def stop_recording(request):
-#    if recorder.recording:
-#        recorder.recording = False
-#    return HttpResponse("Recording stopped")
+import requests
+
+@csrf_exempt
+def stop_recording(request, meeting_id):
+    if recorder.recording:
+        print(meeting_id)
+        my_meeting_id=int(meeting_id)
+        # recorder.recording = False
+        # url = f'http://127.0.0.1:8000/recording_transcription/get_transcription/{my_meeting_id}/'
+        # response = requests.get(url)
+        recorder.recording = False
+        get_transcription(request,my_meeting_id)
+    return HttpResponse("Recording stopped")
+
+@csrf_exempt
+def priority_list(request):
+    if request.method == 'GET':
+        priorities = Priority.objects.all()
+        data = [{'priority_id': priority.priority_id, 'name': priority.name} for priority in priorities]
+    return JsonResponse(data, safe=False)
+
+@csrf_exempt
+def status_list(request):
+    if request.method == 'GET':
+        status_lists = Status.objects.all()
+        data = [{'status_id': status.status_id, 'name': status.name} for status in status_lists]
+    return JsonResponse(data, safe=False)
+
+
 
 
 

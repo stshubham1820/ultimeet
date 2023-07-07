@@ -60,3 +60,17 @@ class Transcript(models.Model):
 
     class Meta:
         db_table = 'Transcript'
+
+class Priority(models.Model):
+    priority_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+
+    class Meta:
+        db_table = 'priority'
+
+class Status(models.Model):
+    status_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+
+    class Meta:
+        db_table = 'status'

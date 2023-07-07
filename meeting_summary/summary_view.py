@@ -32,12 +32,12 @@ def summary_text(meeting_id):
     prompt = final_transcript#trancript_object.transcript_raw
     prompt_chunks = textwrap.wrap(prompt, max_prompt_tokens)
 
-    openai.api_key = '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'
+    openai.api_key = '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'
     response = None
     for chunk in prompt_chunks:
         response = openai.Completion.create(
             engine="text-davinci-003",
-            prompt=chunk + "\nGive me a brief summary of the meeting in less than 120 words",
+            prompt=chunk + "Give me a detailed summary of the meeting  ",
             temperature=0.2,
             #max_tokens=150,
             max_tokens=buffer_tokens
@@ -45,6 +45,12 @@ def summary_text(meeting_id):
 
     if response: 
         output = response.choices[0].text.strip()
-        return f"meeting_id: {meeting_id}\nSummary: {output}"
+        summary = {
+           # "meeting_id": meeting_id,
+            "summary": output
+        }
+        #parsed_summary_data = json.dumps(summary["summary"].replace("\\", ""))
+        print(output)
+        return output
     else:
-        return "None"
+        return json.dumps({"meeting_id": meeting_id, "summary": "None"})
