@@ -1,7 +1,7 @@
 import requests
 import json
 import time
-#from pydub import AudioSegment
+
 
 base_url = "https://api.assemblyai.com/v2"
 
@@ -9,111 +9,113 @@ headers = {
     "authorization": "3791eb83c72547c88214e5f95449a4c2"
 }
 
-with open("/Users/sudarshanchavan/Desktop/Projects/meetings-master-4/ultimeet_backend/ultimeet/recording_transcription/Panel_Discussion_AI.mp3", "rb") as f:
-  response = requests.post(base_url + "/upload",
-                          headers=headers,
-                          data=f)
+def upload_audio(file_path):
+    with open(file_path, "rb") as f:
+        response = requests.post(base_url + "/upload",
+                                 headers=headers,
+                                 data=f)
+    print('Upload_URL::',response)
+    upload_url = response.json()["upload_url"]
+    
+    return upload_url
 
-upload_url = response.json()["upload_url"]
+def get_transcript(upload_url):
+    print('Upload_URL::',upload_url)
+    data = {
+        "audio_url": upload_url,
+        "speaker_labels": True,
+        "entity_detection": True,
+        "speakers_expected": 2
+    }
 
-#audio = AudioSegment.from_file("audio.wav")
+    url = base_url + "/transcript"
+    response = requests.post(url, json=data, headers=headers)
 
-data = {
-    "audio_url": upload_url,
-    "speaker_labels": True,
-    "entity_detection": True,
-    "speakers_expected": 2
-}
+    if response.status_code == 200:
+        response_json = response.json()
+        if "id" in response_json:
+            transcript_id = response_json["id"]
+            polling_endpoint = f"https://api.assemblyai.com/v2/transcript/{transcript_id}"
 
-url = base_url + "/transcript"
-response = requests.post(url, json=data, headers=headers)
+            while True:
+                transcription_result = requests.get(polling_endpoint, headers=headers).json()
 
-transcript_id = response.json()['id']
-polling_endpoint = f"https://api.assemblyai.com/v2/transcript/{transcript_id}"
+                if transcription_result['status'] == 'completed':
+                    entities = transcription_result['entities']
+                    utterances = transcription_result['utterances']
+                    return entities, utterances
 
-utterances = ""
-entities = ""
+                elif transcription_result['status'] == 'error':
+                    raise RuntimeError(f"Transcription failed: {transcription_result['error']}")
 
-while True:
-  transcription_result = requests.get(polling_endpoint, headers=headers).json()
+                else:
+                    time.sleep(3)
 
-  if transcription_result['status'] == 'completed':
-    #transcription_result = transcription_result['transcription_result']
-    entities = transcription_result['entities']
-    utterances = transcription_result['utterances']
-    #print(f"Entities {entities}")
-    #print(utterances)
-    # Iterate through each utterance and print the speaker and the text they spoke
+        else:
+            raise RuntimeError("Transcript ID not found in the response")
 
-    def process_utterance(utterance):
-        resultTranscript = []
-        #resultTranscript = ""
-        for utterance in utterances:
-            for entity in entities:
-                if(entity['entity_type'] == 'person_name'):
-                #print("Entity Type:", entity['entity_type'])
-                    #print("Text:", entity['text'])
-                #print()  # Add an empty line between entities
-                    pass
-            #break
-            speaker = utterance['speaker']
-            text = utterance['text']
-            start_time = utterance['start']
-            end_time = utterance['end']
-            
-            #segment_audio = audio[start_time:end_time]
-            #segment_audio.export(f"{speaker}.wav", format="wav")
-        
-            resultTranscript.append({
-            'avatar': 'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50.jpg',
+    else:
+        error_message = response.json().get("error") or "Unknown error"
+        raise RuntimeError(f"Transcription request failed with status code {response.status_code}: {error_message}")
+
+
+
+def process_utterance(entities, utterances):
+    resultTranscript = []
+    for utterance in utterances:
+        for entity in entities:
+            if entity['entity_type'] == 'person_name':
+                pass
+        speaker = utterance['speaker']
+        text = utterance['text']
+        start_time = utterance['start']
+        end_time = utterance['end']
+
+        resultTranscript.append({
+            'avatar': 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
             'speaker': speaker,
             'text': text,
             'start_time': start_time,
             'end_time': end_time
         })
         #resultTranscript.append({'meeting_id': 1})
-            #print(f"Speaker {speaker}:: {text}")
-            #resultTranscript += f"Speaker {speaker}:: {text}\n"  # append new string with a newline character
-        return json.dumps(resultTranscript,ensure_ascii=False)   
-    break
 
-  elif transcription_result['status'] == 'error':
-    raise RuntimeError(f"Transcription failed: {transcription_result['error']}")
+    return json.dumps(resultTranscript, ensure_ascii=False)
 
-  else:
-    time.sleep(3)
-
-def process_transcription():
-    finaltrans = process_utterance(utterances)
+def process_transcription(entities, utterances,meeting_id):
+    print('uploadfile name:',meeting_id)
+    file_path = "/Users/sudarshanchavan/Desktop/my_code/{}.wav".format(meeting_id)
+    upload_url = upload_audio(file_path)
+    entities, utterances = get_transcript(upload_url)
+    finaltrans = process_utterance(entities, utterances)
     #print(f"final Transcript:",finaltrans)
     updated_transcript, updated_utterances = find_speakers(utterances,entities,finaltrans)
+    
 
+    print("Updated Transcript:", updated_transcript)
+   
+    
     return updated_transcript
 
 def find_speakers(utterances, entities, transcript):
-    for i in range(len(utterances)):  # assuming utterances and entities have the same length
-        entity = entities[i]
-        if entity['entity_type'] == 'person_name':
-            new_speaker = entity['text']
-            utterance = utterances[i]
-            speaker = utterance['speaker']
-            transcript = update_speaker_in_transcript(transcript, speaker, new_speaker)
-            utterance['speaker'] = new_speaker  # Update the speaker label in the utterance
+    for i in range(len(utterances)):
+        if i < len(entities):  # Check if the index is within the range of entities
+            entity = entities[i]
+            if entity['entity_type'] == 'person_name':
+                new_speaker = entity['text']
+                print('new_speaker:',new_speaker)
+                utterance = utterances[i]
+                speaker = utterance['speaker']
+                transcript = update_speaker_in_transcript(transcript, speaker, new_speaker)
+                utterance['speaker'] = new_speaker
     return transcript, utterances
 
+
 def update_speaker_in_transcript(transcript, old_speaker, new_speaker):
-    if len(old_speaker) == 1:  # Check if speaker's name is a single character
+    if len(old_speaker) == 1:
         updated_transcript = transcript.replace(old_speaker, new_speaker)
         return updated_transcript
     else:
-        return transcript  # Return original transcript if speaker's name is not a single character
+        return transcript
 
-
-
-
-
-
-#print(updated_transcript)
-#print("Updated Transcript:", updated_transcript)
-#print("Updated Utterances:", updated_utterances)
 

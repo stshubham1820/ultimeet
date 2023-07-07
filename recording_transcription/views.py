@@ -5,7 +5,7 @@ from django.http import JsonResponse,HttpResponse
 import json
 from datetime import datetime
 from .transcript import process_transcription
-from .audio_recorder import AudioRecorder
+
 
 
 
@@ -316,31 +316,6 @@ def transcription_view(request, meeting_id):
     else:
         return JsonResponse({'error': 'Invalid request method.'}, status=405)
 
-import threading
-
-recorder = AudioRecorder()
-
-@csrf_exempt
-def start_recording(request,meeting_id):
-   if not recorder.recording:
-       recorder.recording = True
-       recorder.meeting_id = meeting_id
-       threading.Thread(target=recorder.record_audio).start()
-   return HttpResponse("Recording started")
-
-import requests
-
-@csrf_exempt
-def stop_recording(request, meeting_id):
-    if recorder.recording:
-        print(meeting_id)
-        my_meeting_id=int(meeting_id)
-        # recorder.recording = False
-        # url = f'http://127.0.0.1:8000/recording_transcription/get_transcription/{my_meeting_id}/'
-        # response = requests.get(url)
-        recorder.recording = False
-        get_transcription(request,my_meeting_id)
-    return HttpResponse("Recording stopped")
 
 @csrf_exempt
 def priority_list(request):
