@@ -32,7 +32,7 @@ def summary_text(meeting_id):
     prompt = final_transcript#trancript_object.transcript_raw
     prompt_chunks = textwrap.wrap(prompt, max_prompt_tokens)
 
-    openai.api_key = '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'
+    openai.api_key = 'sk-m9XN22oM1nLBIR1ircsYT3BlbkFJZI9sjQ6DX3Lpgtn'
     response = None
     for chunk in prompt_chunks:
         response = openai.Completion.create(

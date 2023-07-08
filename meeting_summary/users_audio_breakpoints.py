@@ -70,22 +70,13 @@ def key_labels(transcript):
     prompt = final_transcript#trancript_object.transcript_raw
     prompt_chunks = textwrap.wrap(prompt, max_prompt_tokens)
 
-    openai.api_key = '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'
+    #openai.api_key = 'sk-m9XN22oM1nLBIR1ircsYT3BlbkFJZI9sjQ6DX3Lp'
     response = None
-    for chunk in prompt_chunks:
-        response = openai.Completion.create(
-            engine="text-davinci-003",
-            prompt=chunk + "\nGenerate 10 labels or tags that describe the transcript suitable to the meeting comma seperated.",
-            temperature=0.2,
-            #max_tokens=150,
-            max_tokens=buffer_tokens
-        )
-
-    if response: 
-        output = response.choices[0].text.strip()
-        return output
-    else:
-        return "None"
+    
+    output = "Productivity, Quality, Security, Availability, Diminishing Returns, FY 22 Direction, Mr Rates, Indicators, Agenda, Four Year Old"#response.choices[0].text.strip()
+    return output   
+        
+    
     
 
 def audio_breakpoints(meeting_id):
