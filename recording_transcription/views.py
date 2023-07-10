@@ -321,14 +321,14 @@ def transcription_view(request, meeting_id):
 def priority_list(request):
     if request.method == 'GET':
         priorities = Priority.objects.all()
-        data = [{'priority_id': priority.priority_id, 'name': priority.name} for priority in priorities]
+        data = [{'priority_id': priority.priority_id, 'name': priority.name,'value':priority.value} for priority in priorities]
     return JsonResponse(data, safe=False)
 
 @csrf_exempt
 def status_list(request):
     if request.method == 'GET':
         status_lists = Status.objects.all()
-        data = [{'status_id': status.status_id, 'name': status.name} for status in status_lists]
+        data = [{'status_id': status.status_id, 'name': status.name,'value': status.value} for status in status_lists]
     return JsonResponse(data, safe=False)
 
 @csrf_exempt

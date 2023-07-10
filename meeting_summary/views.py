@@ -81,7 +81,7 @@ def users_audio_breakpoints(request, meeting_id):
             audio_breakpoints_data = [
     {
         "name": "Eric Johnson",
-        "avatar": "https://images.unsplash.com/photo-1524666041070-9d87656c25bb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bWFsZXxlbnwwfHwwfHx8MA%3D%3D&w=1000&q=80",
+        "avatar": "https://www.classicaloasis.com/wp-content/uploads/2014/03/profile-square.jpg",
         "username": "ericjohnson",
         "audio_breakpoints": {
             "start": [

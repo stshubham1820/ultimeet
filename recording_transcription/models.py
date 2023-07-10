@@ -64,6 +64,7 @@ class Transcript(models.Model):
 class Priority(models.Model):
     priority_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
+    value = models.CharField(max_length=255)
 
     class Meta:
         db_table = 'priority'
@@ -71,6 +72,7 @@ class Priority(models.Model):
 class Status(models.Model):
     status_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
+    value = models.CharField(max_length=255)
 
     class Meta:
         db_table = 'status'

@@ -9,7 +9,7 @@ class ActionItem(models.Model):
     owner = models.CharField(max_length=255)
     reporter = models.CharField(max_length=255)
     priority = models.CharField(max_length=255)
-    due_on = models.CharField(max_length=255)
+    due_on = models.DateTimeField(null=True)
     status = models.CharField(max_length=255)
     actions = models.TextField()
     dependencies = models.CharField(max_length=255, blank=True, null=True)  # New column
