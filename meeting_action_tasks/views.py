@@ -201,6 +201,8 @@ def get_action_items_by_meeting_id(request, meeting_id):
             'due_on': item.due_on,
             'status': item.status,
             'actions': item.actions,
+            'reporter_profile_pic': item.reporter_profile_pic,
+            'owner_profile_pic': item.owner_profile_pic,
         })
     return JsonResponse(data, safe=False)
         

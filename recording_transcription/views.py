@@ -335,7 +335,7 @@ def status_list(request):
 def users_list(request):
     if request.method == 'GET':
         user_lists = meeting_user_details.objects.all()
-        data = [{'id': users.id, 'name': users.name} for users in user_lists]
+        data = [{'id': users.id, 'name': users.name,'profile_pic': users.profile_pic} for users in user_lists]
     return JsonResponse(data, safe=False)
 
 @csrf_exempt

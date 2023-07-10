@@ -78,6 +78,7 @@ class Status(models.Model):
 class meeting_user_details(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
+    profile_pic = models.CharField(max_length=255)
 
     class Meta:
         db_table = 'meeting_user_details'

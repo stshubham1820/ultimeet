@@ -27,7 +27,7 @@ def get_action_items(request):
     for chunk in prompt_chunks:
         response = openai.Completion.create(
             engine="text-davinci-003",
-            prompt=chunk + "\nGive me a action items of the meeting in less than 120 words",
+            prompt=chunk + "\nGive me a action items of the meeting in less than 20 words",
             temperature=0.2,
             #max_tokens=150,
             max_tokens=buffer_tokens

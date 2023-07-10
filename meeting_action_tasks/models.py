@@ -14,6 +14,8 @@ class ActionItem(models.Model):
     actions = models.TextField()
     dependencies = models.CharField(max_length=255, blank=True, null=True)  # New column
     comments = models.TextField(blank=True, null=True)  # New column
+    reporter_profile_pic = models.TextField(blank=True, null=True)  # New column
+    owner_profile_pic = models.TextField(blank=True, null=True)
     meeting = models.ForeignKey(Meeting, on_delete=models.CASCADE)
     class Meta:
         db_table = 'action_item'
