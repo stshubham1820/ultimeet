@@ -17,11 +17,26 @@ def summary_view(request, meeting_id):
     if request.method == 'GET':
         try:
             #meeting = Meeting.objects.get(id=meeting_id)
-            summary = "At the meeting, the team discussed the productivity rate, which had been raised to eleven but was then brought back down to ten. It was decided that the productivity rate should be held at ten going forward, and that the team should focus on other indicators such as quality, security, and availability to improve. Eric Johnson then concluded the meeting and everyone said their goodbyes." #summary_text(meeting_id)
-            #summary_object = Summary(meeting_id=meeting_id, summary=summary)
-            #print('Summary:',summary_object)
-            #summary_object.save()
-            return JsonResponse({'meeting_id': meeting_id,'summary': summary})
+            summary = {
+                "title": "Engineering Key Review Meeting Summary",
+                "bullets": [
+                    "Eric Johnson proposed breaking up the meeting into four department key reviews: development, quality, security and UX",
+                    "The proposal suggests a two-month rotation for each department to avoid adding too many meetings to stakeholders' calendars",
+                    "Discussion about R&D overall MR rate and R&D wider MR rate, including the need to clarify the definition and metrics",
+                    "Consideration of measuring the percentage of total MRs that come from the community as a KPI",
+                    "Concerns raised about the spike in meantime to close for S2 issues and the need for further investigation",
+                    "Updates on defect tracking and SLO achievement metrics, including plans to measure the age of open bugs",
+                    "Attention drawn to the decline in Sus score, but with improvements noted in the latest quarter",
+                    "Discussion on the narrow MR rate, taking into account vacation days and expectations for a rebound in the following months",
+                    "Importance of balancing productivity with other indicators related to quality, security, and availability"
+                ]
+            }
+
+            # Save summary object to database if needed
+            # summary_object = Summary(meeting_id=meeting_id, summary=summary)
+            # summary_object.save()
+
+            return JsonResponse({'meeting_id': meeting_id, 'summary': summary})
 
         except Meeting.DoesNotExist:
             return JsonResponse({'error': 'Meeting not found.'}, status=404)
@@ -66,7 +81,7 @@ def users_audio_breakpoints(request, meeting_id):
             audio_breakpoints_data = [
     {
         "name": "Eric Johnson",
-        "avatar": "https://photos.com",
+        "avatar": "https://images.unsplash.com/photo-1524666041070-9d87656c25bb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bWFsZXxlbnwwfHwwfHx8MA%3D%3D&w=1000&q=80",
         "username": "ericjohnson",
         "audio_breakpoints": {
             "start": [
@@ -90,7 +105,7 @@ def users_audio_breakpoints(request, meeting_id):
     },
     {
         "name": "B",
-        "avatar": "https://photos.com",
+        "avatar": "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
         "username": "b",
         "audio_breakpoints": {
             "start": [
@@ -104,7 +119,7 @@ def users_audio_breakpoints(request, meeting_id):
     },
     {
         "name": "Dayne John",
-        "avatar": "https://photos.com",
+        "avatar": "https://media.istockphoto.com/id/1317783028/photo/side-view-silhouette-of-business-man-isolate-on-white.jpg?s=612x612&w=0&k=20&c=gTU9UsKfxQ9m_RcrHl-iaAGUhsg-GPgQJ867u8zYc7w=",
         "username": "daynejohn",
         "audio_breakpoints": {
             "start": [
@@ -120,7 +135,7 @@ def users_audio_breakpoints(request, meeting_id):
     },
     {
         "name": "Lyra",
-        "avatar": "https://photos.com",
+        "avatar": "https://media.istockphoto.com/id/1504194952/photo/pretty-smiling-joyfully-female-dressed-casually-smiling-looking-with-satisfaction-at-camera.webp?b=1&s=170667a&w=0&k=20&c=Ll31aFaWj2omz-4wqxrsOWXwLJ5XfZEm8YUehHEbWGU=",
         "username": "lyra",
         "audio_breakpoints": {
             "start": [
@@ -142,6 +157,51 @@ def users_audio_breakpoints(request, meeting_id):
                 'mediaURL' : '/Users/sparshbohra/ultimeet/ultimeet_backend/ultimeet/recording_transcription/Panel_Discussion_AI.mp3',
                 'meeting_key_labels': [meeting_labels],
                 'users_audio_breakpoints': audio_breakpoints_data
+            }
+
+            return JsonResponse(response_data)
+
+        except Meeting.DoesNotExist:
+            return JsonResponse({'error': 'Meeting not found.'}, status=404)
+    else:
+        return JsonResponse({'error': 'Invalid request method.'}, status=405)
+
+@csrf_exempt
+def actionOwner(request):
+    if request.method == 'GET':
+        try:
+            # Assuming that you have a function to fetch meeting labels
+            #meeting_labels = meeting_key_labels(meeting_id)
+            
+            # get the user's audio breakpoints
+            #audio_breakpoints_data = audio_breakpoints(meeting_id)
+
+            actionOwner_data = [
+    {
+        "owner_id": 1,
+        "name": "Eric Johnson"
+    },
+    {
+        "owner_id": 2,
+        "name": "Steve"
+    },
+    {
+        "owner_id": 3,
+        "name": "Christopher"
+    },
+     {
+        "owner_id": 4,
+        "name": "Dayne John"
+    },
+    {
+        "owner_id": 4,
+        "name": "Lyra"
+    },
+]
+
+                
+            response_data = {
+                 actionOwner_data
             }
 
             return JsonResponse(response_data)

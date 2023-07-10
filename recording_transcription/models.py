@@ -74,3 +74,20 @@ class Status(models.Model):
 
     class Meta:
         db_table = 'status'
+
+class meeting_user_details(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+
+    class Meta:
+        db_table = 'meeting_user_details'
+
+class Comments(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+    comments = models.CharField(max_length=255)
+    profile_pics = models.CharField(max_length=255)
+    meeting = models.ForeignKey(Meeting, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'meeting_comments'

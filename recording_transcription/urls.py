@@ -11,4 +11,6 @@ urlpatterns = [
    path('get_transcription/<int:meeting_id>/', views.get_transcription, name='get_transcription'),
    path('priorities/', views.priority_list, name='priority-list'),
    path('status/', views.status_list, name='status-list'),
+   path('users_list/', views.users_list, name='users-list'),
+   path('meeting_comments/<int:meeting_id>/', views.meeting_comments, name='meeting_comments'),
 ]

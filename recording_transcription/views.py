@@ -1,5 +1,5 @@
 from user_authentication.models import User, Session
-from recording_transcription.models import Meeting, Transcript, Priority,Status
+from recording_transcription.models import Meeting, Transcript, Priority,Status,meeting_user_details,Comments
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse,HttpResponse
 import json
@@ -330,6 +330,24 @@ def status_list(request):
         status_lists = Status.objects.all()
         data = [{'status_id': status.status_id, 'name': status.name} for status in status_lists]
     return JsonResponse(data, safe=False)
+
+@csrf_exempt
+def users_list(request):
+    if request.method == 'GET':
+        user_lists = meeting_user_details.objects.all()
+        data = [{'id': users.id, 'name': users.name} for users in user_lists]
+    return JsonResponse(data, safe=False)
+
+@csrf_exempt
+def meeting_comments(request, meeting_id):
+    if request.method == 'GET':
+        meeting_comments = Comments.objects.filter(meeting_id=meeting_id)
+        data = [{'id': comment.id, 'name': comment.name, 'comments': comment.comments, 'profile_pics': comment.profile_pics} for comment in meeting_comments]
+        response = {
+            "total_count": len(data),
+            "comments": data
+        }
+        return JsonResponse(response, safe=False)
 
 
 
