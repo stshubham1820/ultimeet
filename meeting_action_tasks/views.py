@@ -156,6 +156,8 @@ def update_action_item(request, action_item_id):
             actions = data.get('actions')
             dependencies = data.get('dependencies')
             comments = data.get('comments')
+            reporter_profile_pic = data.get('reporter_profile_pic')
+            owner_profile_pic = data.get('owner_profile_pic')
 
             # Update the action item
             action_item.name = name
@@ -167,6 +169,8 @@ def update_action_item(request, action_item_id):
             action_item.actions = actions
             action_item.dependencies = dependencies
             action_item.comments = comments
+            action_item.reporter_profile_pic = reporter_profile_pic
+            action_item.owner_profile_pic = owner_profile_pic
             action_item.save()
             
             # Prepare the updated action item data for response

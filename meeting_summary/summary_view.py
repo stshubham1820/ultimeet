@@ -28,8 +28,7 @@ max_prompt_tokens = max_tokens - buffer_tokens
 
 def summary_text(meeting_id):
     final_transcript = get_transcript_raw(meeting_id)
-    #trancript_object = transcript.objects.get()
-    prompt = final_transcript#trancript_object.transcript_raw
+    prompt = final_transcript
     prompt_chunks = textwrap.wrap(prompt, max_prompt_tokens)
 
     openai.api_key = 'sk-m9XN22oM1nLBIR1ircsYT3BlbkFJZI9sjQ6DX3Lpgtn'
@@ -45,12 +44,6 @@ def summary_text(meeting_id):
 
     if response: 
         output = response.choices[0].text.strip()
-        summary = {
-           # "meeting_id": meeting_id,
-            "summary": output
-        }
-        #parsed_summary_data = json.dumps(summary["summary"].replace("\\", ""))
-        print(output)
         return output
     else:
-        return json.dumps({"meeting_id": meeting_id, "summary": "None"})
+        return None
